@@ -1,19 +1,21 @@
-volatile void kernel_main() {
-    volatile unsigned short *vga = (unsigned short*)0xB8000;
-    const char *prompt = "ClisseyOS> ";
+#include "vga.h"
+#include "keyboard.h"
+#include "idt.h"
+
+void kernel_main() {
+    vga_init();
+    vga_print("Setting up IDT...");
     
-    // Limpia pantalla
-    for (int i = 0; i < 80*25; i++) {
-        vga[i] = 0x0F00 | ' ';
-    }
+    idt_init();          // Configurar IDT
+    install_exception_handlers(); // Handlers básicos
+    keyboard_init();     // Configurar teclado
     
-    // Muestra prompt
-    for (int i = 0; prompt[i]; i++) {
-        vga[i] = 0x0F00 | prompt[i];
-    }
+    vga_print("\nClisseyOS Ready!");
+    vga_print("\n> ");
     
-    // Espera entrada (implementación básica)
-    while (1) {
-        // Aquí iría el código para leer el teclado
+    asm volatile("sti"); // Habilitar interrupciones
+    
+    while(1) {
+        asm volatile("hlt"); // Esperar interrupciones
     }
 }

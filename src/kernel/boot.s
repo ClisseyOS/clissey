@@ -16,5 +16,11 @@ _start:
     mov eax, 0x0F20     ; 0x0F=atributo (blanco), 0x20=espacio ASCII
     rep stosw           ; ¡Llena toda la pantalla!
 
+    mov esp, 0x90000
+    mov ebp, esp
+
+    extern kernel_main
     call kernel_main
+    
+    cli
     hlt

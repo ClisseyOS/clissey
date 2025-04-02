@@ -5,13 +5,15 @@ SECTIONS {
     .multiboot_header : {
         *(.multiboot_header)
     }
-    .text : {
+    .text : ALIGN(4K) {
         *(.text)
     }
-    .data : {
+    .data : ALIGN(4K) {
         *(.data)
+        *(.rodata*)
     }
-    .bss : {
+    .bss : ALIGN(4K) {
+        *(COMMON)
         *(.bss)
     }
 }
